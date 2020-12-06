@@ -1,7 +1,9 @@
 import request from '@/utils/request'
 
 const userApi = {
-  Login: '/auth/login',
+  // 登录地址
+  Login: 'api-auth/oauth/token',
+  // Login: '/auth/login',
   Logout: '/auth/logout',
   ForgePassword: '/auth/forge-password',
   Register: '/auth/register',

@@ -24,7 +24,7 @@
                 {rules: [{ required: true, message: '请输入帐户名或邮箱地址' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
               ]"
             >
-              <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+              <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input>
           </a-form-item>
 
@@ -37,14 +37,14 @@
                 {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
               ]"
             >
-              <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+              <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input-password>
           </a-form-item>
         </a-tab-pane>
         <a-tab-pane key="tab2" tab="手机号登录">
           <a-form-item>
             <a-input size="large" type="text" placeholder="手机号" v-decorator="['mobile', {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' }], validateTrigger: 'change'}]">
-              <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+              <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input>
           </a-form-item>
 
@@ -52,7 +52,7 @@
             <a-col class="gutter-row" :span="16">
               <a-form-item>
                 <a-input size="large" type="text" placeholder="验证码" v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]">
-                  <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+                  <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }" />
                 </a-input>
               </a-form-item>
             </a-col>
@@ -75,7 +75,8 @@
           :to="{ name: 'recover', params: { user: 'aaa'} }"
           class="forge-password"
           style="float: right;"
-        >忘记密码</router-link>
+        >忘记密码
+        </router-link>
       </a-form-item>
 
       <a-form-item style="margin-top:24px">
@@ -86,7 +87,8 @@
           class="login-button"
           :loading="state.loginBtn"
           :disabled="state.loginBtn"
-        >确定</a-button>
+        >确定
+        </a-button>
       </a-form-item>
 
       <div class="user-login-other">
@@ -144,7 +146,7 @@ export default {
     }
   },
   created () {
-    get2step({ })
+    get2step({})
       .then(res => {
         this.requiredTwoStepCaptcha = res.result.stepCode
       })
@@ -166,6 +168,7 @@ export default {
       }
       callback()
     },
+    // 24324
     handleTabClick (key) {
       this.customActiveKey = key
       // this.form.resetFields()
@@ -189,7 +192,17 @@ export default {
           const loginParams = { ...values }
           delete loginParams.username
           loginParams[!state.loginType ? 'email' : 'username'] = values.username
-          loginParams.password = md5(values.password)
+          // 这句话 可以不要， 暂时先注释
+          loginParams.password2 = md5(values.password)
+          loginParams.password = values.password
+          // 这里先写死
+          // validCode: 6mf2
+          loginParams.deviceId = '328CFBCC-A52F-48B0-8DB9-B4970F8435B6'
+          loginParams.grant_type = 'password'
+          loginParams.client_id = 'webApp'
+          loginParams.client_secret = 'webApp'
+          loginParams.scope = 'app'
+          debugger
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
             .catch(err => this.requestFailed(err))
@@ -248,6 +261,7 @@ export default {
     },
     loginSuccess (res) {
       console.log(res)
+      debugger
       // check res.homePage define, set $router.push name res.homePage
       // Why not enter onComplete
       /*
@@ -270,6 +284,7 @@ export default {
       this.isLoginError = false
     },
     requestFailed (err) {
+      debugger
       this.isLoginError = true
       this.$notification['error']({
         message: '错误',
